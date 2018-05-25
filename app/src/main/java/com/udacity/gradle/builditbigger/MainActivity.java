@@ -11,13 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-import com.techpearl.jokes.JokeFactory;
 import com.techpearl.jokeshow.JokeDisplayActivity;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
@@ -26,9 +24,10 @@ import java.io.IOException;
 import javax.annotation.Nullable;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityFragment.ButtonClickListener{
 
-    private CountingIdlingResource espressoIdlingResource = new CountingIdlingResource("Server_Call");
+    private CountingIdlingResource espressoIdlingResource =
+            new CountingIdlingResource("Server_Call");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +60,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
        // Toast.makeText(this, JokeFactory.getJoke(), Toast.LENGTH_SHORT).show();
-        new EndpointsAsyncTask().execute(new Pair<Context, CountingIdlingResource>(this, espressoIdlingResource));
+
+
 
     }
+
+    @Override
+    public void onButtonClicked() {
+        new EndpointsAsyncTask().execute(new Pair<Context, CountingIdlingResource>(this, espressoIdlingResource));
+    }
+
     class EndpointsAsyncTask extends AsyncTask<Pair<Context, CountingIdlingResource>, Void, String> {
         private MyApi myApiService = null;
         private Context context;
