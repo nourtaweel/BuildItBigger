@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -28,11 +29,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
     private CountingIdlingResource espressoIdlingResource =
             new CountingIdlingResource("Server_Call");
+    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mLoadingIndicator = findViewById(R.id.loadingIndicator);
     }
 
 
@@ -58,15 +61,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         return super.onOptionsItemSelected(item);
     }
 
-    public void tellJoke(View view) {
-       // Toast.makeText(this, JokeFactory.getJoke(), Toast.LENGTH_SHORT).show();
-
-
-
-    }
-
     @Override
     public void onButtonClicked() {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
         new EndpointsAsyncTask().execute(new Pair<Context, CountingIdlingResource>(this, espressoIdlingResource));
     }
 
@@ -110,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         protected void onPostExecute(String result) {
            // Toast.makeText(context, result, Toast.LENGTH_LONG).show();
             mIdlingRes.decrement();
+            mLoadingIndicator.setVisibility(View.GONE);
             Intent intent = new Intent(context, JokeDisplayActivity.class);
             intent.putExtra(JokeDisplayActivity.EXTRA_JOKE, result);
             startActivity(intent);
