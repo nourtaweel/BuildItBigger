@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Joke Show</string>
+    <string name="textview_text">not funny!</string>
+</resources>
