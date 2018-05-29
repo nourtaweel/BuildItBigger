@@ -35,7 +35,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MainActivityFragment fragment =
+                (MainActivityFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment);
+        fragment.setIdlingRes(espressoIdlingResource);
         mLoadingIndicator = findViewById(R.id.loadingIndicator);
+
     }
 
 

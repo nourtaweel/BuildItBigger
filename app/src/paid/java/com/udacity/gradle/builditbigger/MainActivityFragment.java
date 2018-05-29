@@ -2,6 +2,7 @@ package com.udacity.gradle.builditbigger;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,14 @@ import android.widget.Button;
 public class MainActivityFragment extends Fragment {
     private static final String TAG = MainActivityFragment.class.getSimpleName();
     private ButtonClickListener mListener;
+    private CountingIdlingResource mIdlingRes;
 
     public MainActivityFragment() {
     }
+    void setIdlingRes(CountingIdlingResource idlingRes){
+        this.mIdlingRes = idlingRes;
+    }
+
 
     @Override
     public void onAttach(Context context) {

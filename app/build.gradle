@@ -62,3 +62,10 @@ dependencies {
     implementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
     testImplementation 'junit:junit:4.12'
 }
+task runTest{
+    description "Run the GCE server, do the test and turn off the server"
+    group "my custom tasks"
+    dependsOn =[":backend:appengineStart",":app:connectedCheck"]
+    finalizedBy ":backend:appengineStop"
+}
+connectedCheck.shouldRunAfter(":backend:appengineStart")
