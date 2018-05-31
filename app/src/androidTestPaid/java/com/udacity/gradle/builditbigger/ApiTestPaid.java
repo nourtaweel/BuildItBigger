@@ -18,7 +18,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.IsNot.not;
-
+/*Tests the paid version of the App*/
 @RunWith(AndroidJUnit4.class)
 public class ApiTestPaid {
     @Rule
@@ -32,7 +32,9 @@ public class ApiTestPaid {
     }
     @Test
     public void asyncTaskTest(){
+        //click the button
         onView(withId(R.id.button)).perform(click());
+        //check the joke is visible
         onView(withId(R.id.textView)).check(matches(not(withText(""))));
     }
     @After

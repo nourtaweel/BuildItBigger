@@ -30,7 +30,6 @@ public class MainActivityFragment extends Fragment {
     }
 
     void setIdlingRes(CountingIdlingResource idlingRes){
-        Log.d(TAG,"set idling res");
         this.mIdlingRes = idlingRes;
     }
     @Override
@@ -54,19 +53,21 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                //mInterstitialAd.loadAd(mAdRequest);
+                //when closed start the AsyncTak to retrieve the joke
                 mListener.onButtonClicked();
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                //once the ad is loaded, the test can continue
                 mIdlingRes.decrement();
             }
 
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
+                //if failed to load an Ad, the test can continue
                 mIdlingRes.decrement();
             }
         });
@@ -82,11 +83,9 @@ public class MainActivityFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mIdlingRes.increment();
                 if(mInterstitialAd.isLoaded()){
                     mInterstitialAd.show();
                 } else {
-                    //mIdlingRes.decrement();
                     Log.d(TAG, "The interstitial wasn't loaded yet.");
                     mListener.onButtonClicked();
                 }
@@ -98,6 +97,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        //pause the test until the ad is loaded or failed
         mIdlingRes.increment();
     }
 
@@ -109,6 +109,7 @@ public class MainActivityFragment extends Fragment {
         }
         return mAdRequest;
     }
+    /*A listener interface to inform the hosting Activity for button clicks*/
     interface ButtonClickListener {
         void onButtonClicked();
     }

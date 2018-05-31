@@ -22,7 +22,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.IsNot.not;
-
+/*Tests the free version of the App*/
 @RunWith(AndroidJUnit4.class)
 public class ApiTestFree {
     @Rule
@@ -34,12 +34,16 @@ public class ApiTestFree {
         mIdlingResource = mActivityRule.getActivity().getEspressoIdlingResource();
         Espresso.registerIdlingResources(mIdlingResource);
     }
+
     @Test
     public void asyncTaskTest(){
+        //click the button
         onView(withId(R.id.button)).perform(click());
+        //when the interstial ad opens, click the close button
         ViewInteraction imageButton = onView(
                 allOf(withContentDescription("Interstitial close button"), isDisplayed()));
         imageButton.perform(click());
+        //check the joke is visible
         onView(withId(R.id.textView)).check(matches(not(withText(""))));
 
     }

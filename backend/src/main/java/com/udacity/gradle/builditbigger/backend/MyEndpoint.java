@@ -31,7 +31,8 @@ public class MyEndpoint {
     public MyBean pullJoke()
     {
         MyBean joke = new MyBean();
-        joke.setData(JokeFactory.getJoke() + " from server");
+        //get the joke from the Java library
+        joke.setData(JokeFactory.getJoke());
         return joke;
     }
 
