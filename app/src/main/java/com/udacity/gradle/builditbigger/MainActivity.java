@@ -2,9 +2,12 @@ package com.udacity.gradle.builditbigger;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.Snackbar;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -68,8 +72,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
     @Override
     public void onButtonClicked() {
-        mLoadingIndicator.setVisibility(View.VISIBLE);
-        new EndpointsAsyncTask().execute(new Pair<Context, CountingIdlingResource>(this, espressoIdlingResource));
+        if(isConnected()){
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+            new EndpointsAsyncTask().execute(new Pair<Context,
+                    CountingIdlingResource>(this, espressoIdlingResource));
+        }else {
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.mainLayout),
+                    R.string.connectivity_issue_message,
+                    Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+
     }
 
     class EndpointsAsyncTask extends AsyncTask<Pair<Context, CountingIdlingResource>, Void, String> {
@@ -101,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             }
 
             try {
-                //return myApiService.sayHi(name).execute().getData();
                 return  myApiService.pullJoke().execute().getData();
             } catch (IOException e) {
                 return e.getMessage();
@@ -110,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
         @Override
         protected void onPostExecute(String result) {
-           // Toast.makeText(context, result, Toast.LENGTH_LONG).show();
             mIdlingRes.decrement();
             mLoadingIndicator.setVisibility(View.GONE);
             Intent intent = new Intent(context, JokeDisplayActivity.class);
@@ -119,6 +130,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         }
     }
 
+    private boolean isConnected(){
+        /* Based on code snippet in
+         * https://developer.android.com/training/basics/network-ops/managing.html */
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
     @VisibleForTesting
     public CountingIdlingResource getEspressoIdlingResource(){
         return espressoIdlingResource;
